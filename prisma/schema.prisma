@@ -1,0 +1,76 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          Int       @id @default(autoincrement())
+  username    String    @unique
+  email       String    @unique
+  password    String
+  tasks       Task[]
+  comments    Comment[]
+  replies     CommentReply[]
+  projects    Project[]    @relation("ProjectParticipants")
+  createdProjects Project[] @relation("ProjectCreator")
+}
+
+model Task {
+  id          Int       @id @default(autoincrement())
+  userId      Int
+  title       String
+  description String
+  projectId   Int
+  isDone      Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  dueDate     DateTime?
+  priority    Int       @default(0)
+  updatedAt   DateTime  @updatedAt
+  user        User      @relation(fields: [userId], references: [id])
+  project     Project   @relation(fields: [projectId], references: [id])
+  comments    Comment[]
+}
+
+model Project {
+  id           Int       @id @default(autoincrement())
+  title        String
+  description  String
+  participants User[]    @relation("ProjectParticipants")
+  createdAt    DateTime  @default(now())
+  isDone       Boolean   @default(false)
+  deadline     DateTime?
+  createdBy    User      @relation("ProjectCreator", fields: [createdById], references: [id])
+  createdById  Int
+  updatedAt    DateTime  @updatedAt
+  tasks        Task[]
+}
+
+model Comment {
+  id        Int            @id @default(autoincrement())
+  userId    Int
+  taskId    Int
+  createdAt DateTime       @default(now())
+  likes     Int           @default(0)
+  content   String
+  user      User          @relation(fields: [userId], references: [id])
+  task      Task          @relation(fields: [taskId], references: [id])
+  replies   CommentReply[]
+}
+
+model CommentReply {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  commentId Int
+  createdAt DateTime @default(now())
+  content   String
+  likes     Int      @default(0)
+  user      User     @relation(fields: [userId], references: [id])
+  comment   Comment  @relation(fields: [commentId], references: [id])
+}
