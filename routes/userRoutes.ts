@@ -1,25 +1,21 @@
 import express from "express";
+import { validate } from "../middlewares/validate";
 import {
-  getUsers,
-  getUserById,
-  deleteUser,
+  loginSchema,
+  registerSchema,
+} from "../models/validators/userValidator";
+import asyncHandler from "../middlewares/asyncHandler";
+import {
   register,
   login,
+  getUserInfoById,
 } from "../controllers/UserController";
-import { z } from "zod";
-import { validate } from "../middlewares/validate";
+import authMiddleware from "../middlewares/authMiddleware";
 
 const router = express.Router();
 
-const UserSchema = z.object({
-  email: z.string().email("Not a valid mail"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
-});
-
-router.get("/", getUsers);
-router.get("/:id", getUserById);
-router.post("/register", validate(UserSchema), register);
-router.post("/login", login);
-router.delete("/:id", deleteUser);
+router.post("/register", validate(registerSchema), asyncHandler(register));
+router.post("/login", validate(loginSchema), asyncHandler(login));
+router.get("/me", authMiddleware, asyncHandler(getUserInfoById));
 
 export default router;
