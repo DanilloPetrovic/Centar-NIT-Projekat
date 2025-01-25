@@ -57,6 +57,7 @@ export const getUserInfoById = async (userID: number) => {
   const user = await prisma.user.findUnique({
     where: { id: userID },
     select: {
+      id: true,
       username: true,
       email: true,
       tasks: true,

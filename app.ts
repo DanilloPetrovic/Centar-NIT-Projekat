@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import helmet from "helmet";
 import userRoutes from "./routes/userRoutes";
+import taskRoutes from "./routes/taskRoutes";
 import authMiddleware from "./middlewares/authMiddleware";
 import errorHandler from "./middlewares/errorHandler";
 import { AuthenticateRequest } from "./types/AuthenticatedRequest";
@@ -18,16 +19,9 @@ app.get("/", (req, res) => {
   res.status(200).json({ message: "API running" });
 });
 
-app.get("/protected", authMiddleware, (req: AuthenticateRequest, res) => {
-  res.status(200).json({ message: "You are authenticated", user: req.user });
-});
-
-// Middleware to parse JSON requests
-
-// Register routes
 app.use("/users", userRoutes);
+app.use("/task", taskRoutes);
 
-// Error handling for undefined routes
 app.use((req, res) => {
   res.status(404).json({ error: "Route not found" });
 });
