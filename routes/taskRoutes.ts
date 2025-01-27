@@ -33,25 +33,25 @@ router.post(
 router.delete("/deletetask/:id", authMiddleware, asyncHandler(deleteTask));
 router.post("/taskcomplete", authMiddleware, asyncHandler(completeTask));
 router.post("/taskincomplete", authMiddleware, asyncHandler(incompleteTask));
-router.get("/getalltasks", authMiddleware, asyncHandler(getAllTasks));
+router.get("/getalltasks/:id", authMiddleware, asyncHandler(getAllTasks));
 router.get(
-  "/getcompletedtasks",
+  "/getcompletedtasks/:id",
   authMiddleware,
   asyncHandler(getCompletedTasks)
 );
 router.get(
-  "/getincompletedtasks",
+  "/getincompletedtasks/:id",
   authMiddleware,
   asyncHandler(getIncompletedTasks)
 );
-router.get("/getnewesttasks", authMiddleware, asyncHandler(getNewestTasks));
+router.get("/getnewesttasks/:id", authMiddleware, asyncHandler(getNewestTasks));
 router.get(
-  "/gettasksbypriority/:priority",
+  "/gettasksbypriority/:priority/:id",
   authMiddleware,
   asyncHandler(getTasksByPriority)
 );
 router.get(
-  "/gettasksbyclosestduedate",
+  "/gettasksbyclosestduedate/:id",
   authMiddleware,
   asyncHandler(getTasksByClosestDueDate)
 );

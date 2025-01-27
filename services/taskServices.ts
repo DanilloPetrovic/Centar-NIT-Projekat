@@ -1,3 +1,4 @@
+import { equal } from "assert";
 import prisma from "../prisma";
 import createHttpError from "http-errors";
 
@@ -95,9 +96,13 @@ export const isDoneFalse = async (taskId: number) => {
   }
 };
 
-export const getAllTasks = async () => {
+export const getAllTasks = async (userIdProp: number) => {
   try {
-    const allTasks = await prisma.task.findMany();
+    const allTasks = await prisma.task.findMany({
+      where: {
+        userId: userIdProp,
+      },
+    });
 
     return allTasks;
   } catch (error) {
@@ -105,10 +110,10 @@ export const getAllTasks = async () => {
   }
 };
 
-export const getCompletedTasks = async () => {
+export const getCompletedTasks = async (userIdProp: number) => {
   try {
     const completedTasks = await prisma.task.findMany({
-      where: { isDone: true },
+      where: { isDone: true, userId: userIdProp },
     });
 
     return completedTasks;
@@ -117,10 +122,10 @@ export const getCompletedTasks = async () => {
   }
 };
 
-export const getIncompletedTasks = async () => {
+export const getIncompletedTasks = async (userIdProp: number) => {
   try {
     const incompletedTasks = await prisma.task.findMany({
-      where: { isDone: false },
+      where: { isDone: false, userId: userIdProp },
     });
 
     return incompletedTasks;
@@ -129,9 +134,12 @@ export const getIncompletedTasks = async () => {
   }
 };
 
-export const getNewestTasks = async () => {
+export const getNewestTasks = async (userIdProp: number) => {
   try {
     const newestTasks = await prisma.task.findMany({
+      where: {
+        userId: userIdProp,
+      },
       orderBy: {
         createdAt: "desc",
       },
@@ -143,10 +151,13 @@ export const getNewestTasks = async () => {
   }
 };
 
-export const getTaskByPriority = async (priorityProp: string) => {
+export const getTaskByPriority = async (
+  priorityProp: string,
+  userIdProp: number
+) => {
   try {
     const tasksByPriority = await prisma.task.findMany({
-      where: { priority: priorityProp },
+      where: { priority: priorityProp, userId: userIdProp },
       orderBy: {
         createdAt: "desc",
       },
@@ -158,10 +169,11 @@ export const getTaskByPriority = async (priorityProp: string) => {
   }
 };
 
-export const getTasksByClosestDueDate = async () => {
+export const getTasksByClosestDueDate = async (userIdProp: number) => {
   try {
     const tasksByClosestDueDate = await prisma.task.findMany({
       where: {
+        userId: userIdProp,
         dueDate: {
           not: null,
         },
