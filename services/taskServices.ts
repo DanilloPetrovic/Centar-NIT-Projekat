@@ -1,4 +1,3 @@
-import { equal } from "assert";
 import prisma from "../prisma";
 import createHttpError from "http-errors";
 
@@ -21,6 +20,17 @@ export const createTask = async (data: {
         dueDate: data.dueDate ? new Date(data.dueDate) : null,
       },
     });
+
+    if (data.projectId) {
+      await prisma.project.update({
+        where: {
+          id: data.projectId,
+        },
+        data: {
+          id: task.id,
+        },
+      });
+    }
 
     return task;
   } catch (error: any) {

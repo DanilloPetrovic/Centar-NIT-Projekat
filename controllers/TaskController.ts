@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import * as taskService from "../services/taskServices";
-import { AuthenticateRequest } from "../types/AuthenticatedRequest";
 
 export const createTask = async (req: Request, res: Response) => {
   const { title, description, priority, projectId, dueDate, userId } = req.body;
