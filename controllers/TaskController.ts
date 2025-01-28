@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import * as taskService from "../services/taskServices";
-import { AuthenticateRequest } from "../types/AuthenticatedRequest";
 
 export const createTask = async (req: Request, res: Response) => {
   const { title, description, priority, projectId, dueDate, userId } = req.body;
@@ -58,39 +57,54 @@ export const incompleteTask = async (req: Request, res: Response) => {
 };
 
 export const getAllTasks = async (req: Request, res: Response) => {
-  const allTasks = await taskService.getAllTasks();
+  const { id } = req.params;
+
+  const allTasks = await taskService.getAllTasks(Number(id));
 
   res.status(201).json(allTasks);
 };
 
 export const getCompletedTasks = async (req: Request, res: Response) => {
-  const completedTasks = await taskService.getCompletedTasks();
+  const { id } = req.params;
+
+  const completedTasks = await taskService.getCompletedTasks(Number(id));
 
   res.status(201).json(completedTasks);
 };
 
 export const getIncompletedTasks = async (req: Request, res: Response) => {
-  const incompletedTasks = await taskService.getIncompletedTasks();
+  const { id } = req.params;
+
+  const incompletedTasks = await taskService.getIncompletedTasks(Number(id));
 
   res.status(201).json(incompletedTasks);
 };
 
 export const getNewestTasks = async (req: Request, res: Response) => {
-  const newestTasks = await taskService.getNewestTasks();
+  const { id } = req.params;
+
+  const newestTasks = await taskService.getNewestTasks(Number(id));
 
   res.status(201).json(newestTasks);
 };
 
 export const getTasksByPriority = async (req: Request, res: Response) => {
-  const { priority } = req.params;
+  const { priority, id } = req.params;
 
-  const tasksByPriority = await taskService.getTaskByPriority(priority);
+  const tasksByPriority = await taskService.getTaskByPriority(
+    priority,
+    Number(id)
+  );
 
   res.status(201).json(tasksByPriority);
 };
 
 export const getTasksByClosestDueDate = async (req: Request, res: Response) => {
-  const tasksByClosestDueDate = await taskService.getTasksByClosestDueDate();
+  const { id } = req.params;
+
+  const tasksByClosestDueDate = await taskService.getTasksByClosestDueDate(
+    Number(id)
+  );
 
   res.status(201).json(tasksByClosestDueDate);
 };

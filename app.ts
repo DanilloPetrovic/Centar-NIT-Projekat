@@ -3,9 +3,8 @@ import cors from "cors";
 import helmet from "helmet";
 import userRoutes from "./routes/userRoutes";
 import taskRoutes from "./routes/taskRoutes";
-import authMiddleware from "./middlewares/authMiddleware";
+import projectRoutes from "./routes/projectRoutes";
 import errorHandler from "./middlewares/errorHandler";
-import { AuthenticateRequest } from "./types/AuthenticatedRequest";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -21,6 +20,7 @@ app.get("/", (req, res) => {
 
 app.use("/users", userRoutes);
 app.use("/task", taskRoutes);
+app.use("/project", projectRoutes);
 
 app.use((req, res) => {
   res.status(404).json({ error: "Route not found" });
