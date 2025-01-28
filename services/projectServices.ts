@@ -63,8 +63,8 @@ export const updateProject = async (
 };
 
 export const deleteProject = async (idProp: number) => {
-  const isProjectExsist = await prisma.project.findUnique({
-    where: { id: idProp },
+  const isProjectExsist = await prisma.project.findFirst({
+    where: { id: idProp, isDeleted: false },
   });
 
   if (!isProjectExsist) {
@@ -72,8 +72,11 @@ export const deleteProject = async (idProp: number) => {
   }
 
   try {
-    const deletedProject = await prisma.project.delete({
+    const deletedProject = await prisma.project.update({
       where: { id: idProp },
+      data: {
+        isDeleted: true,
+      },
     });
 
     return deletedProject;
@@ -113,8 +116,9 @@ export const updateParticipent = async (
 
 export const getAllMyProjects = async (userId: number) => {
   try {
-    const myProjects = prisma.project.findMany({
+    const myProjects = await prisma.project.findMany({
       where: {
+        isDeleted: false,
         participants: {
           some: {
             id: userId,
@@ -133,6 +137,7 @@ export const getProjectsThatCreatedByMe = async (userId: number) => {
   try {
     const myProjects = await prisma.project.findMany({
       where: {
+        isDeleted: false,
         createdById: userId,
       },
     });
@@ -144,8 +149,8 @@ export const getProjectsThatCreatedByMe = async (userId: number) => {
 };
 
 export const projectDone = async (idProp: number) => {
-  const isProjectExsist = await prisma.project.findUnique({
-    where: { id: idProp },
+  const isProjectExsist = await prisma.project.findFirst({
+    where: { id: idProp, isDeleted: false },
   });
 
   if (!isProjectExsist) {
@@ -161,6 +166,8 @@ export const projectDone = async (idProp: number) => {
         isDone: true,
       },
     });
+
+    return projectDone;
   } catch (error) {
     throw createHttpError(500, "Failed");
   }

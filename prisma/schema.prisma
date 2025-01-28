@@ -51,6 +51,7 @@ model Project {
   createdById  Int
   updatedAt    DateTime  @updatedAt
   tasks        Task[]
+  isDeleted    Boolean   @default(false)
 }
 
 model Comment {

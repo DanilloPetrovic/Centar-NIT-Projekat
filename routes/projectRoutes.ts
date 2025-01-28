@@ -29,11 +29,7 @@ router.post(
   asyncHandler(updateProject)
 );
 
-router.delete(
-  "/deleteproject/:id",
-  authMiddleware,
-  asyncHandler(deleteProject)
-);
+router.post("/deleteproject/:id", authMiddleware, asyncHandler(deleteProject));
 
 router.post(
   "/updateparticipants/:id",
