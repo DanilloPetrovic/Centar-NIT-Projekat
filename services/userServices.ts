@@ -74,3 +74,15 @@ export const getUserInfoById = async (userID: number) => {
 
   return user;
 };
+
+export const getAllUsers = async (idProp: number) => {
+  try {
+    const allUsers = await prisma.user.findMany({
+      where: { NOT: { id: idProp } },
+    });
+
+    return allUsers;
+  } catch (error) {
+    throw createHttpError(500, "Failed");
+  }
+};

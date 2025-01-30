@@ -32,3 +32,11 @@ export const getUserInfoById = async (
 
   res.status(200).json(user);
 };
+
+export const getAllUsers = async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  const allUsers = await userService.getAllUsers(Number(id));
+
+  res.status(200).json(allUsers);
+};
