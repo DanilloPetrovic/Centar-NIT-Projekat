@@ -9,6 +9,8 @@ import {
   getAllMyProjects,
   getProjectsThatCreatedByMe,
   projectDone,
+  getAllProjectsNoFilter,
+  getSingleProject,
 } from "../controllers/projectController";
 import { projectSchema } from "../models/validators/projectValidator";
 import { validate } from "../middlewares/validate";
@@ -38,6 +40,12 @@ router.post(
 );
 
 router.get(
+  "/getallprojectnofilter/:id",
+  authMiddleware,
+  asyncHandler(getAllProjectsNoFilter)
+);
+
+router.get(
   "/getallproject/:id",
   authMiddleware,
   asyncHandler(getAllMyProjects)
@@ -48,6 +56,8 @@ router.get(
   authMiddleware,
   asyncHandler(getProjectsThatCreatedByMe)
 );
+
+router.get("/getproject/:id", authMiddleware, asyncHandler(getSingleProject));
 
 router.post("/projectdone/:id", authMiddleware, asyncHandler(projectDone));
 

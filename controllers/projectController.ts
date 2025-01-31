@@ -48,6 +48,14 @@ export const updateParticipent = async (req: Request, res: Response) => {
   res.status(201).json(updatedProject);
 };
 
+export const getAllProjectsNoFilter = async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  const myProjects = await projectService.getAllProjectsNoFilter(Number(id));
+
+  res.status(201).json(myProjects);
+};
+
 export const getAllMyProjects = async (req: Request, res: Response) => {
   const { id } = req.params;
 
@@ -67,6 +75,14 @@ export const getProjectsThatCreatedByMe = async (
   );
 
   res.status(201).json(myProjects);
+};
+
+export const getSingleProject = async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  const project = await projectService.getSingleProject(Number(id));
+
+  res.status(201).json(project);
 };
 
 export const projectDone = async (req: Request, res: Response) => {

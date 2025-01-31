@@ -1,13 +1,14 @@
 import { User } from "@prisma/client";
 import prisma from "../prisma";
 import createHttpError from "http-errors";
+import { create } from "domain";
 
 export const createProject = async (dataProps: {
   title: string;
   description: string;
   createdById: number;
   participants: number[];
-  deadline?: string;
+  deadline: string;
 }) => {
   try {
     const project = await prisma.project.create({
@@ -18,7 +19,7 @@ export const createProject = async (dataProps: {
         participants: {
           connect: dataProps.participants.map((id) => ({ id })),
         },
-        deadline: dataProps.deadline,
+        deadline: dataProps.deadline ? new Date(dataProps.deadline) : null,
       },
     });
 
@@ -114,6 +115,30 @@ export const updateParticipent = async (
   }
 };
 
+export const getAllProjectsNoFilter = async (userId: number) => {
+  try {
+    const noFilterProjects = await prisma.project.findMany({
+      where: {
+        isDeleted: false,
+        participants: {
+          some: {
+            id: userId,
+          },
+        },
+      },
+
+      include: {
+        createdBy: true,
+        participants: true,
+      },
+    });
+
+    return noFilterProjects;
+  } catch (error) {
+    throw createHttpError(500, "Failed");
+  }
+};
+
 export const getAllMyProjects = async (userId: number) => {
   try {
     const myProjects = await prisma.project.findMany({
@@ -124,6 +149,12 @@ export const getAllMyProjects = async (userId: number) => {
             id: userId,
           },
         },
+        NOT: { createdById: userId },
+      },
+
+      include: {
+        createdBy: true,
+        participants: true,
       },
     });
 
@@ -140,11 +171,34 @@ export const getProjectsThatCreatedByMe = async (userId: number) => {
         isDeleted: false,
         createdById: userId,
       },
+
+      include: {
+        createdBy: true,
+        participants: true,
+      },
     });
 
     return myProjects;
   } catch (error) {
     throw createHttpError(500, "Failed to get projects that you craeted");
+  }
+};
+
+export const getSingleProject = async (idProp: number) => {
+  try {
+    const project = await prisma.project.findUnique({
+      where: {
+        id: idProp,
+      },
+      include: {
+        createdBy: true,
+        participants: true,
+      },
+    });
+
+    return project;
+  } catch (error) {
+    throw createHttpError(500, "Failed");
   }
 };
 
