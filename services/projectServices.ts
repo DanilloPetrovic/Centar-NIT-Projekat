@@ -7,7 +7,7 @@ export const createProject = async (dataProps: {
   description: string;
   createdById: number;
   participants: number[];
-  deadline: string;
+  deadline?: string;
 }) => {
   try {
     const project = await prisma.project.create({
