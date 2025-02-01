@@ -202,6 +202,20 @@ export const getSingleProject = async (idProp: number) => {
   }
 };
 
+export const getProjectTasks = async (idProp: number) => {
+  try {
+    const tasks = await prisma.task.findMany({
+      where: {
+        projectId: idProp,
+      },
+    });
+
+    return tasks;
+  } catch (error) {
+    throw createHttpError(500, "Failed");
+  }
+};
+
 export const projectDone = async (idProp: number) => {
   const isProjectExsist = await prisma.project.findFirst({
     where: { id: idProp, isDeleted: false },

@@ -11,6 +11,7 @@ import {
   projectDone,
   getAllProjectsNoFilter,
   getSingleProject,
+  getProjectTasks,
 } from "../controllers/projectController";
 import { projectSchema } from "../models/validators/projectValidator";
 import { validate } from "../middlewares/validate";
@@ -60,5 +61,7 @@ router.get(
 router.get("/getproject/:id", authMiddleware, asyncHandler(getSingleProject));
 
 router.post("/projectdone/:id", authMiddleware, asyncHandler(projectDone));
+
+router.get("/gettasks/:id", authMiddleware, asyncHandler(getProjectTasks));
 
 export default router;

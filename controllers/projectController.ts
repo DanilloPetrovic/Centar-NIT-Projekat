@@ -85,6 +85,14 @@ export const getSingleProject = async (req: Request, res: Response) => {
   res.status(201).json(project);
 };
 
+export const getProjectTasks = async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  const tasks = await projectService.getProjectTasks(Number(id));
+
+  res.status(201).json(tasks);
+};
+
 export const projectDone = async (req: Request, res: Response) => {
   const { id } = req.params;
 
