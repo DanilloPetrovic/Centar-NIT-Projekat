@@ -4,6 +4,7 @@ import helmet from "helmet";
 import userRoutes from "./routes/userRoutes";
 import taskRoutes from "./routes/taskRoutes";
 import projectRoutes from "./routes/projectRoutes";
+import commentRoutes from "./routes/commentRoutes";
 import errorHandler from "./middlewares/errorHandler";
 import dotenv from "dotenv";
 
@@ -21,6 +22,7 @@ app.get("/", (req, res) => {
 app.use("/users", userRoutes);
 app.use("/task", taskRoutes);
 app.use("/project", projectRoutes);
+app.use("/comment", commentRoutes);
 
 app.use((req, res) => {
   res.status(404).json({ error: "Route not found" });

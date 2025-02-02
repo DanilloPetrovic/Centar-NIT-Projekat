@@ -1,7 +1,5 @@
-import { User } from "@prisma/client";
 import prisma from "../prisma";
 import createHttpError from "http-errors";
-import { create } from "domain";
 
 export const createProject = async (dataProps: {
   title: string;
@@ -193,6 +191,7 @@ export const getSingleProject = async (idProp: number) => {
       include: {
         createdBy: true,
         participants: true,
+        tasks: true,
       },
     });
 
