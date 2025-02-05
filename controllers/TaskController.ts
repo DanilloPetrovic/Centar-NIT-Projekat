@@ -2,13 +2,12 @@ import { Request, Response } from "express";
 import * as taskService from "../services/taskServices";
 
 export const createTask = async (req: Request, res: Response) => {
-  const { title, description, priority, projectId, dueDate, userId } = req.body;
+  const { title, description, priority, dueDate, userId } = req.body;
 
   const task = await taskService.createTask({
     title,
     description,
     priority,
-    projectId,
     dueDate,
     userId,
   });
@@ -107,4 +106,19 @@ export const getTasksByClosestDueDate = async (req: Request, res: Response) => {
   );
 
   res.status(201).json(tasksByClosestDueDate);
+};
+
+export const createProjectTask = async (req: Request, res: Response) => {
+  const { title, description, priority, projectId, dueDate, userId } = req.body;
+
+  const task = await taskService.createProjectTask({
+    title,
+    description,
+    priority,
+    projectId,
+    dueDate,
+    userId,
+  });
+
+  res.status(201).json(task);
 };

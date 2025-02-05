@@ -25,13 +25,18 @@ export const createReply = async (req: Request, res: Response) => {
   const { commentId } = req.params;
   const { userIdProp, content } = req.body;
 
-  const reply = await commentsService.createReply({
-    commentId: Number(commentId),
-    userIdProp: Number(userIdProp),
-    content,
-  });
+  try {
+    const reply = await commentsService.createReply({
+      commentId: Number(commentId),
+      userIdProp: Number(userIdProp),
+      content,
+    });
 
-  res.status(201).json(reply);
+    res.status(201).json(reply);
+  } catch (error) {
+    console.error("Error in createReply route:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
 };
 
 export const deleteReply = async (req: Request, res: Response) => {
@@ -39,4 +44,20 @@ export const deleteReply = async (req: Request, res: Response) => {
 
   const deletedReply = await commentsService.deleteReply(Number(id));
   res.status(201).json(deletedReply);
+};
+
+export const getCommentsFromTask = async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  const comments = await commentsService.getCommentsFromTask(Number(id));
+
+  res.status(201).json(comments);
+};
+
+export const getRepliesFromComment = async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  const replies = await commentsService.getRepliesFromComment(Number(id));
+
+  res.status(201).json(replies);
 };

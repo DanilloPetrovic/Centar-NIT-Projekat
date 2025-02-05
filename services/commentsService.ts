@@ -68,3 +68,41 @@ export const deleteReply = async (id: number) => {
     throw createHttpError(500, "Failed");
   }
 };
+
+export const getCommentsFromTask = async (idProp: number) => {
+  try {
+    const comments = await prisma.comment.findMany({
+      where: {
+        taskId: idProp,
+      },
+      include: {
+        user: true,
+        replies: true,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    return comments;
+  } catch (error) {
+    throw createHttpError(500, "Failed");
+  }
+};
+
+export const getRepliesFromComment = async (idProp: number) => {
+  try {
+    const replies = await prisma.commentReply.findMany({
+      where: {
+        commentId: idProp,
+      },
+      include: {
+        user: true,
+      },
+    });
+
+    return replies;
+  } catch (error) {
+    throw createHttpError(500, "Failed");
+  }
+};

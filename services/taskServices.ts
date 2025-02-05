@@ -6,7 +6,6 @@ export const createTask = async (data: {
   description: string;
   priority: string;
   userId: number;
-  projectId?: number;
   dueDate?: string;
 }) => {
   try {
@@ -16,21 +15,9 @@ export const createTask = async (data: {
         description: data.description,
         priority: data.priority,
         userId: data.userId,
-        projectId: data.projectId,
         dueDate: data.dueDate ? new Date(data.dueDate) : null,
       },
     });
-
-    if (data.projectId) {
-      await prisma.project.update({
-        where: {
-          id: data.projectId,
-        },
-        data: {
-          id: task.id,
-        },
-      });
-    }
 
     return task;
   } catch (error: any) {
@@ -196,5 +183,31 @@ export const getTasksByClosestDueDate = async (userIdProp: number) => {
     return tasksByClosestDueDate;
   } catch (error) {
     throw createHttpError(401, "Failed to fetch");
+  }
+};
+
+export const createProjectTask = async (data: {
+  title: string;
+  description: string;
+  priority: string;
+  userId: number;
+  projectId: number;
+  dueDate?: string;
+}) => {
+  try {
+    const task = await prisma.task.create({
+      data: {
+        title: data.title,
+        description: data.description,
+        priority: data.priority,
+        userId: data.userId,
+        projectId: data.projectId,
+        dueDate: data.dueDate ? new Date(data.dueDate) : null,
+      },
+    });
+
+    return task;
+  } catch (error) {
+    throw createHttpError(500, "Failed");
   }
 };

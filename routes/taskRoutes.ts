@@ -3,6 +3,7 @@ import asyncHandler from "../middlewares/asyncHandler";
 import authMiddleware from "../middlewares/authMiddleware";
 import {
   completeTask,
+  createProjectTask,
   createTask,
   deleteTask,
   getAllTasks,
@@ -54,6 +55,11 @@ router.get(
   "/gettasksbyclosestduedate/:id",
   authMiddleware,
   asyncHandler(getTasksByClosestDueDate)
+);
+router.post(
+  "/createprojecttask",
+  authMiddleware,
+  asyncHandler(createProjectTask)
 );
 
 export default router;
